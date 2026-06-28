@@ -1,13 +1,16 @@
 'use client'
 import Link from 'next/link'
-import { ShoppingCart, Menu, X } from 'lucide-react'
+import { ShoppingCart, Menu, X, User, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { useCartStore } from '@/store/cart'
+import { useAuth } from '@/context/AuthContext'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const items = useCartStore(s => s.items)
   const total = items.reduce((sum, i) => sum + i.quantity, 0)
+  const { user, signOut } = useAuth()
 
   const links = [
     { href: '/', label: '首頁' },
@@ -30,6 +33,8 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
+
+          {/* 購物車 */}
           <Link href="/cart" className="relative p-2">
             <ShoppingCart size={22} className="text-[#8b4513]" />
             {total > 0 && (
@@ -38,6 +43,41 @@ export default function Navbar() {
               </span>
             )}
           </Link>
+
+          {/* 登入狀態 */}
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center gap-2 text-sm text-[#5a3820] hover:text-[#8b4513]"
+              >
+                {user.user_metadata?.avatar_url ? (
+                  <img src={user.user_metadata.avatar_url} alt="" className="w-8 h-8 rounded-full" />
+                ) : (
+                  <User size={22} className="text-[#8b4513]" />
+                )}
+              </button>
+              {userMenuOpen && (
+                <div className="absolute right-0 top-10 bg-white border border-[#e8d5c4] rounded-xl shadow-lg py-2 w-40 z-50">
+                  <p className="px-4 py-2 text-xs text-[#a07050] truncate">{user.email}</p>
+                  <hr className="border-[#e8d5c4] my-1" />
+                  <Link href="/orders" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-[#2d1a0e] hover:bg-[#f5ede4]">
+                    我的訂單
+                  </Link>
+                  <button
+                    onClick={() => { signOut(); setUserMenuOpen(false) }}
+                    className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2"
+                  >
+                    <LogOut size={14} /> 登出
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link href="/login" className="text-sm text-[#8b4513] font-semibold hover:underline">
+              登入
+            </Link>
+          )}
         </div>
 
         {/* Mobile */}
@@ -63,6 +103,14 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
+          {user ? (
+            <>
+              <Link href="/orders" onClick={() => setOpen(false)} className="text-[#5a3820]">我的訂單</Link>
+              <button onClick={() => { signOut(); setOpen(false) }} className="text-left text-red-500 text-sm">登出</button>
+            </>
+          ) : (
+            <Link href="/login" onClick={() => setOpen(false)} className="text-[#8b4513] font-semibold">登入</Link>
+          )}
         </div>
       )}
     </nav>

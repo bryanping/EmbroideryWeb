@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
+import { AuthProvider } from '@/context/AuthContext'
 
 export const metadata: Metadata = {
   title: '手作刺繡工坊｜客製化刺繡',
@@ -16,9 +17,11 @@ export default function RootLayout({
   return (
     <html lang="zh-TW">
       <body>
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   )
