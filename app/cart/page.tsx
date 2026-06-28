@@ -46,6 +46,9 @@ export default function CartPage() {
                 {item.hasDesign && (
                   <p className="text-xs text-[#a07050]">+ 設計費 NT$200</p>
                 )}
+                {item.accessories?.length > 0 && (
+                  <p className="text-xs text-[#a07050]">配飾：{item.accessories.map(a => a.name).join('、')}</p>
+                )}
                 {item.designNote && (
                   <p className="text-xs text-[#5a3820] mt-1">備註：{item.designNote}</p>
                 )}
@@ -72,11 +75,17 @@ export default function CartPage() {
         {/* 費用小計 */}
         <div className="bg-white rounded-2xl p-6 border border-[#e8d5c4] h-fit">
           <h2 className="font-bold text-[#2d1a0e] mb-4">費用明細</h2>
-          <div className="space-y-3 text-sm">
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-[#5a3820]">商品小計</span>
               <span>{formatPrice(fees.subtotal)}</span>
             </div>
+            {fees.accessoriesFee > 0 && (
+              <div className="flex justify-between">
+                <span className="text-[#5a3820]">配飾費用</span>
+                <span>{formatPrice(fees.accessoriesFee)}</span>
+              </div>
+            )}
             {fees.designFee > 0 && (
               <div className="flex justify-between">
                 <span className="text-[#5a3820]">設計費 × {fees.designCount}</span>
@@ -88,6 +97,15 @@ export default function CartPage() {
                 <span className="text-[#5a3820]">刺繡貼工本費 × {fees.patchCount}</span>
                 <span>{formatPrice(fees.productionFee)}</span>
               </div>
+            )}
+            <div className="flex justify-between">
+              <span className="text-[#5a3820]">運費</span>
+              <span className={fees.shippingFee === 0 ? 'text-green-600 font-medium' : ''}>
+                {fees.shippingFee === 0 ? '免運' : formatPrice(fees.shippingFee)}
+              </span>
+            </div>
+            {fees.shippingFee > 0 && (
+              <p className="text-xs text-[#a07050]">滿 NT$1,500 免運費</p>
             )}
             <div className="border-t border-[#e8d5c4] pt-3 flex justify-between font-bold text-base">
               <span>合計</span>

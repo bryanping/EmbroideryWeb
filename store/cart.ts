@@ -1,10 +1,18 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { CartItem, Product } from '@/lib/types'
+import { CartItem, Product, Accessory, DesignPosition } from '@/lib/types'
+
+type AddItemOpts = {
+  designImageUrl?: string
+  designNote?: string
+  designPosition?: DesignPosition
+  accessories?: Accessory[]
+  hasDesign?: boolean
+}
 
 type CartStore = {
   items: CartItem[]
-  addItem: (product: Product, opts?: { designImageUrl?: string; designNote?: string; hasDesign?: boolean }) => void
+  addItem: (product: Product, opts?: AddItemOpts) => void
   removeItem: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
@@ -16,16 +24,7 @@ export const useCartStore = create<CartStore>()(
       items: [],
       addItem: (product, opts = {}) =>
         set((state) => {
-          const existing = state.items.find(i => i.product.id === product.id)
-          if (existing) {
-            return {
-              items: state.items.map(i =>
-                i.product.id === product.id
-                  ? { ...i, quantity: i.quantity + 1 }
-                  : i
-              ),
-            }
-          }
+          // 每次都新增（允許同商品多筆，含不同設計）
           return {
             items: [
               ...state.items,
@@ -34,6 +33,8 @@ export const useCartStore = create<CartStore>()(
                 quantity: 1,
                 designImageUrl: opts.designImageUrl,
                 designNote: opts.designNote,
+                designPosition: opts.designPosition,
+                accessories: opts.accessories ?? [],
                 hasDesign: opts.hasDesign ?? false,
               },
             ],

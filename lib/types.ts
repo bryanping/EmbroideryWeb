@@ -59,17 +59,36 @@ export type OrderItem = {
   created_at: string
 }
 
+export type Accessory = {
+  id: string
+  name: string
+  price: number
+  description: string | null
+  is_active: boolean
+  sort_order: number
+}
+
+export type DesignPosition = {
+  x: number      // 百分比 0-100
+  y: number      // 百分比 0-100
+  scale: number  // 1.0 = 原始大小
+  rotation: number // 度數
+}
+
 // 購物車 item（客戶端 state）
 export type CartItem = {
   product: Product
   quantity: number
   designImageUrl?: string
   designNote?: string
-  // 是否已上傳設計圖（決定是否收設計費）
+  designPosition?: DesignPosition  // 刺繡位置
+  accessories: Accessory[]         // 已選配飾
   hasDesign: boolean
 }
 
 // 費用計算
-export const DESIGN_FEE = 200   // 每張設計圖
-export const PATCH_FEE = 100    // 刺繡貼每個工本費
+export const DESIGN_FEE = 200    // 每張設計圖
+export const PATCH_FEE = 100     // 刺繡貼每個工本費
+export const SHIPPING_FEE = 60   // 運費（固定）
+export const FREE_SHIPPING_THRESHOLD = 1500 // 滿額免運
 export const PATCH_SLUG = 'embroidery-patch'
