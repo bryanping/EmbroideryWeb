@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import { ORDER_STATUS_LABEL, OrderStatus } from '@/lib/types'
 import { formatPrice } from '@/lib/utils'
 
 export default async function AdminDashboard() {

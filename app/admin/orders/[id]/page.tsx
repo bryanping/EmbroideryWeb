@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { formatPrice } from '@/lib/utils'
-import { ORDER_STATUS_LABEL, OrderStatus } from '@/lib/types'
+import { OrderStatus } from '@/lib/types'
 import OrderStatusUpdater from '@/components/admin/OrderStatusUpdater'
 
 export default async function AdminOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {

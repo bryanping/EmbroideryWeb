@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { Order, ORDER_STATUS_LABEL, OrderStatus } from '@/lib/types'
+import { OrderStatus } from '@/lib/types'
 import { formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 import OrderStatusBadge from '@/components/admin/OrderStatusBadge'
