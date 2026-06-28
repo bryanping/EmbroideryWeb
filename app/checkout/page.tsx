@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCartStore } from '@/store/cart'
 import { formatPrice, calcCartFees } from '@/lib/utils'
 import { useForm } from 'react-hook-form'
@@ -27,10 +27,9 @@ export default function CheckoutPage() {
     resolver: zodResolver(schema),
   })
 
-  if (items.length === 0) {
-    router.push('/cart')
-    return null
-  }
+  useEffect(() => {
+    if (items.length === 0) router.push('/cart')
+  }, [items.length, router])
 
   async function onSubmit(data: FormData) {
     setSubmitting(true)
